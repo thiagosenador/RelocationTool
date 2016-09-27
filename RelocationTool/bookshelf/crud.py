@@ -93,7 +93,7 @@ def getUserPreferences(username):
     if token:
         token = token.encode('utf-8')
 
-    users, next_page_token = get_model().listUsers(cursor=token)
+    users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
     preferences, next_page_token = get_model().GetUserPreferences(cursor=token, userName=username)
 
     return render_template(

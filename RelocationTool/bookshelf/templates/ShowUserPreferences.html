@@ -10,12 +10,12 @@
         <select name="user" id="user" onchange="if (this.value) window.location.href = this.value;">
             {% for user in users %}
                 {% if preferences == undefined %}
-                    <option value="/books/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
+                    <option value="/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
                 {% else %}
                     {% if user.UserName == preferences[0].UserName %}
-                    <option value="/books/ShowUserPreferences/{{user.UserName}}" selected="selected">{{user.UserName}}</option>
+                    <option value="/ShowUserPreferences/{{user.UserName}}" selected="selected">{{user.UserName}}</option>
                     {% else %}
-                    <option value="/books/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
+                    <option value="/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
                     {% endif %}
                 {% endif %}
             {% else %}
