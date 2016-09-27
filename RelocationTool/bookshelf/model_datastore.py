@@ -94,6 +94,27 @@ create = update
 # [END update]
 
 
+# [START createUserPreference]
+def createUserPreference(data):
+    ds = get_client()
+    key = ds.key('User', namespace='Portkey')
+    entity = datastore.Entity(key=key)
+
+    embedded_key = ds.key('User')
+    embedded_entity = datastore.Entity(key=embedded_key)
+    embedded_entity['InternationalEducation']=data['education']
+    embedded_entity['Population']=data['population']
+    embedded_entity['Climate']=data['climate']
+    embedded_entity['ExceptCountries']=data['exceptCountries']
+
+    entity['UserName']=data['userName']
+    entity['Preferences']=embedded_entity
+
+    ds.put(entity)
+    return from_datastore(entity)
+# [END createUserPreference]
+
+
 def delete(id):
     ds = get_client()
     key = ds.key('Book', int(id))

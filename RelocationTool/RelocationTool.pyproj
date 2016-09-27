@@ -54,6 +54,7 @@
     <Content Include="bookshelf\templates\list.html" />
     <Content Include="bookshelf\templates\RelocationCountry.html" />
     <Content Include="bookshelf\templates\ShowUserPreferences.html" />
+    <Content Include="bookshelf\templates\welcome.html" />
     <Content Include="bookshelf\templates\view.html" />
     <Content Include="bookshelf\__init__.pyc" />
     <Content Include="bookshelf\__pycache__\crud.cpython-35.pyc" />

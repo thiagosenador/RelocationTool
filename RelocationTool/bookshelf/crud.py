@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 from bookshelf import get_model
 from flask import Blueprint, redirect, render_template, request, url_for
 
 
 crud = Blueprint('crud', __name__)
 
+# [START welcome]
+@crud.route("/")
+def welcome():
+    return render_template("welcome.html")
+# [END welcome]
 
 # [START list]
 @crud.route("/")
@@ -43,8 +50,7 @@ def listCountries():
 
     countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
 
-    return render_template(
-        "RelocationCountry.html",
+    return render_template("RelocationCountry.html",
         countries=countries,
         next_page_token=next_page_token)
 
@@ -59,8 +65,7 @@ def listPotentialEmployers():
 
     employers, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
 
-    return render_template(
-        "RelocationCountry.html",
+    return render_template("RelocationCountry.html",
         countries=countries,
         next_page_token=next_page_token)
 
@@ -75,13 +80,11 @@ def listUsers():
 
     users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
 
-    return render_template(
-        "ShowUserPreferences.html",
+    return render_template("ShowUserPreferences.html",
         users=users,
         next_page_token=next_page_token)
 
 # [END list Users]
-
 
 @crud.route('/<id>')
 def view(id):
@@ -107,17 +110,17 @@ def add():
 @crud.route('/createuser', methods=['GET', 'POST'])
 def createUser():
     climateOptions = get_model().list('ClimateOptions')
+    countries = get_model().list('Country')
     
     if request.method == 'GET':
-        return render_template("createUser.html", preferences={}, options=climateOptions)
+        return render_template("createUser.html", options=climateOptions, countries=countries)
     
     data = request.form.to_dict(flat=True)
 
-    user = get_model().create('User', data)
+    user = get_model().createUserPreference(data)
 
-    return render_template("createUser.html", preferences={}, options=climateOptions)
+    return render_template("createUser.html", options=climateOptions)
 # [END createUser]
-
 @crud.route('/<id>/edit', methods=['GET', 'POST'])
 def edit(id):
     book = get_model().read(id)
