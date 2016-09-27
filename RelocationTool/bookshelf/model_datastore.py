@@ -51,19 +51,20 @@ def from_datastore(entity):
 
 
 # [START list]
-def list(limit=10, cursor=None):
+def list(entity):
     ds = get_client()
-    query = ds.query(kind='Book', order=['title'])
-    it = query.fetch(limit=limit, start_cursor=cursor)
+    query = ds.query(kind=entity, namespace='Portkey')
+    it = query.fetch()
     entities, more_results, cursor = it.next_page()
     entities = builtin_list(map(from_datastore, entities))
-    return entities, cursor.decode('utf-8') if len(entities) == limit else None
+    return entities
 # [END list]
 
 # [START list Users]
-def listUsers(limit=10, cursor=None):
+def listUsers(key, columnName, limit=10, cursor=None):
      ds = get_client()
-     query = ds.query(kind='User', order=['UserName'], namespace='Portkey')
+     #query = ds.query(kind=key, order=['UserName'], namespace='Portkey')
+     query = ds.query(kind=key, order=columnName, namespace='Portkey')
      it = query.fetch(limit=limit, start_cursor=cursor)
      entities, more_results, cursor = it.next_page()
      entities = builtin_list(map(from_datastore, entities))
@@ -90,16 +91,14 @@ def read(id):
 
 
 # [START update]
-def update(data, id=None):
+def update(entityName, data, id=None):
     ds = get_client()
     if id:
-        key = ds.key('Book', int(id))
+        key = ds.key(entityName, int(id), namespace='Portkey')
     else:
-        key = ds.key('Book')
+        key = ds.key(entityName, namespace='Portkey')
 
-    entity = datastore.Entity(
-        key=key,
-        exclude_from_indexes=['description'])
+    entity = datastore.Entity(key=key)
 
     entity.update(data)
     ds.put(entity)
@@ -107,6 +106,27 @@ def update(data, id=None):
 
 create = update
 # [END update]
+
+
+# [START createUserPreference]
+def createUserPreference(data):
+    ds = get_client()
+    key = ds.key('User', namespace='Portkey')
+    entity = datastore.Entity(key=key)
+
+    embedded_key = ds.key('User')
+    embedded_entity = datastore.Entity(key=embedded_key)
+    embedded_entity['InternationalEducation']=data['education']
+    embedded_entity['Population']=data['population']
+    embedded_entity['Climate']=data['climate']
+    embedded_entity['ExceptCountries']=data['exceptCountries']
+
+    entity['UserName']=data['userName']
+    entity['Preferences']=embedded_entity
+
+    ds.put(entity)
+    return from_datastore(entity)
+# [END createUserPreference]
 
 
 def delete(id):

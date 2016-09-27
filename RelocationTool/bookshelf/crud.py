@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 from bookshelf import get_model
 from flask import Blueprint, redirect, render_template, request, url_for
 
 
 crud = Blueprint('crud', __name__)
 
+# [START welcome]
+@crud.route("/")
+def welcome():
+    return render_template("welcome.html")
+# [END welcome]
 
 # [START list]
 @crud.route("/")
@@ -26,14 +33,43 @@ def list():
     if token:
         token = token.encode('utf-8')
 
-    books, next_page_token = get_model().list(cursor=token)
+    books, next_page_token = get_model().list('Book', cursor=token)
 
-    return render_template(
-        "list.html",
+    return render_template("list.html",
         books=books,
         next_page_token=next_page_token)
 
 # [END list]
+
+# [START show countries in dropdown]
+@crud.route("/RelocationCountry", methods=['GET', 'POST'])
+def listCountries():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+
+    return render_template("RelocationCountry.html",
+        countries=countries,
+        next_page_token=next_page_token)
+
+# [END show countries in dropdown]
+
+# [START show potential employers]
+@crud.route("/RelocationCountry", methods=['GET', 'POST'])
+def listPotentialEmployers():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    employers, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+
+    return render_template("RelocationCountry.html",
+        countries=countries,
+        next_page_token=next_page_token)
+
+# [END show potential employers]
 
 # [START list Users]
 @crud.route("/ShowUserPreferences", methods=['GET', 'POST'])
@@ -42,10 +78,9 @@ def listUsers():
     if token:
         token = token.encode('utf-8')
 
-    users, next_page_token = get_model().listUsers(cursor=token)
+    users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
 
-    return render_template(
-        "ShowUserPreferences.html",
+    return render_template("ShowUserPreferences.html",
         users=users,
         next_page_token=next_page_token)
 
@@ -78,7 +113,7 @@ def add():
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
 
-        book = get_model().create(data)
+        book = get_model().create('Book', data)
 
         return redirect(url_for('.view', id=book['id']))
 
@@ -86,6 +121,21 @@ def add():
 # [END add]
 
 
+# [START createUser]
+@crud.route('/createuser', methods=['GET', 'POST'])
+def createUser():
+    climateOptions = get_model().list('ClimateOptions')
+    countries = get_model().list('Country')
+    
+    if request.method == 'GET':
+        return render_template("createUser.html", options=climateOptions, countries=countries)
+    
+    data = request.form.to_dict(flat=True)
+
+    user = get_model().createUserPreference(data)
+
+    return render_template("createUser.html", options=climateOptions)
+# [END createUser]
 @crud.route('/<id>/edit', methods=['GET', 'POST'])
 def edit(id):
     book = get_model().read(id)

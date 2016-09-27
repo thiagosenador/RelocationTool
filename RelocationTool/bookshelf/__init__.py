@@ -38,12 +38,12 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     # Register the Bookshelf CRUD blueprint.
     from .crud import crud
-    app.register_blueprint(crud, url_prefix='/books')
+    app.register_blueprint(crud)
 
     # Add a default root route.
     @app.route("/")
     def index():
-        return redirect(url_for('crud.list'))
+        return redirect(url_for('crud.welcome'))
 
     # Add an error handler. This is useful for debugging the live application,
     # however, you should disable the output of the exception for production
