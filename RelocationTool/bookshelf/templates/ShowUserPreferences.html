@@ -4,12 +4,20 @@
 
 <h3>Users</h3>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="GET" enctype="multipart/form-data">
     <div class="form-group">
         <label for="user">Users: </label>
-        <select name="user" id="user">
+        <select name="user" id="user" onchange="if (this.value) window.location.href = this.value;">
             {% for user in users %}
-            <option value="{{user.id}}">{{user.UserName}}</option>
+                {% if preferences == undefined %}
+                    <option value="/books/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
+                {% else %}
+                    {% if user.UserName == preferences[0].UserName %}
+                    <option value="/books/ShowUserPreferences/{{user.UserName}}" selected="selected">{{user.UserName}}</option>
+                    {% else %}
+                    <option value="/books/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
+                    {% endif %}
+                {% endif %}
             {% else %}
             <option value="No employee found">No employee found</option>
             {% endfor %}
@@ -17,8 +25,13 @@
     </div>
     <div>
         <nav>
-            <ul class="pager">
-                <li><a href="?page_token={{next_page_token}}">More</a></li>
+            <ul>
+                {% for preference in preferences %}
+                <li>Climate: {{preference.Preferences['Climate']}}</li>
+                <li>Population: {{preference.Preferences['Population']}}</li>
+                <li>International Education: {{preference.Preferences['InternationalEducation']}}</li>
+                <br />
+                {% endfor %}
             </ul>
         </nav>
     </div>

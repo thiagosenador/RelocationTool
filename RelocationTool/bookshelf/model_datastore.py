@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import ctypes
+
 from flask import current_app
 from gcloud import datastore
 
@@ -67,6 +69,18 @@ def listUsers(limit=10, cursor=None):
      entities = builtin_list(map(from_datastore, entities))
      return entities, cursor.decode('utf-8') if len(entities) == limit else None
 # [END list Users]
+
+# [START list User countries]
+def GetUserPreferences(limit=10, cursor=None, userName=""):
+     #ctypes.windll.user32.MessageBoxW(0, userName, "User Name", 1)
+     ds = get_client()
+     query = ds.query(kind='User', order=['UserName'], namespace='Portkey')
+     query.add_filter('UserName', '=', userName)
+     it = query.fetch(limit=limit, start_cursor=cursor)
+     entities, more_results, cursor = it.next_page()
+     entities = builtin_list(map(from_datastore, entities))
+     return entities, cursor.decode('utf-8') if len(entities) == limit else None
+# [END list User countries]
 
 def read(id):
     ds = get_client()

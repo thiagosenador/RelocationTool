@@ -51,6 +51,20 @@ def listUsers():
 
 # [END list Users]
 
+# [START Get User countries]
+@crud.route("/ShowUserPreferences/<username>", methods=['GET', 'POST'])
+def getUserPreferences(username):
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    users, next_page_token = get_model().listUsers(cursor=token)
+    preferences, next_page_token = get_model().GetUserPreferences(cursor=token, userName=username)
+
+    return render_template(
+        "ShowUserPreferences.html",
+        users=users, preferences=preferences, next_page_token=next_page_token)
+# [END Get User countries]
 
 @crud.route('/<id>')
 def view(id):
