@@ -49,13 +49,13 @@ def from_datastore(entity):
 
 
 # [START list]
-def list(limit=10, cursor=None):
+def list(entity):
     ds = get_client()
-    query = ds.query(kind='Book', order=['title'])
-    it = query.fetch(limit=limit, start_cursor=cursor)
+    query = ds.query(kind=entity, namespace='Portkey')
+    it = query.fetch()
     entities, more_results, cursor = it.next_page()
     entities = builtin_list(map(from_datastore, entities))
-    return entities, cursor.decode('utf-8') if len(entities) == limit else None
+    return entities
 # [END list]
 
 
@@ -67,16 +67,14 @@ def read(id):
 
 
 # [START update]
-def update(data, id=None):
+def update(entityName, data, id=None):
     ds = get_client()
     if id:
-        key = ds.key('Book', int(id))
+        key = ds.key(entityName, int(id), namespace='Portkey')
     else:
-        key = ds.key('Book')
+        key = ds.key(entityName, namespace='Portkey')
 
-    entity = datastore.Entity(
-        key=key,
-        exclude_from_indexes=['description'])
+    entity = datastore.Entity(key=key)
 
     entity.update(data)
     ds.put(entity)

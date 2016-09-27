@@ -26,15 +26,12 @@ def list():
     if token:
         token = token.encode('utf-8')
 
-    books, next_page_token = get_model().list(cursor=token)
+    books, next_page_token = get_model().list('Book', cursor=token)
 
-    return render_template(
-        "list.html",
+    return render_template("list.html",
         books=books,
         next_page_token=next_page_token)
 # [END list]
-
-
 @crud.route('/<id>')
 def view(id):
     book = get_model().read(id)
@@ -47,13 +44,28 @@ def add():
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
 
-        book = get_model().create(data)
+        book = get_model().create('Book', data)
 
         return redirect(url_for('.view', id=book['id']))
 
     return render_template("form.html", action="Add", book={})
 # [END add]
 
+
+# [START createUser]
+@crud.route('/createuser', methods=['GET', 'POST'])
+def createUser():
+    climateOptions = get_model().list('ClimateOptions')
+    
+    if request.method == 'GET':
+        return render_template("createUser.html", preferences={}, options=climateOptions)
+    
+    data = request.form.to_dict(flat=True)
+
+    user = get_model().create('User', data)
+
+    return render_template("createUser.html", preferences={}, options=climateOptions)
+# [END createUser]
 
 @crud.route('/<id>/edit', methods=['GET', 'POST'])
 def edit(id):
