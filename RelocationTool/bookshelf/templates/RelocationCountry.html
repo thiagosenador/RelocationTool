@@ -1,0 +1,27 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Country</h3>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="country">Select Country:  </label>
+        <select name="country" id="country">
+            {% for country in countries %}
+            <option value="{{country.id}}">{{country.CountryName}}</option>
+            {% else %}
+            <option value="NoCountry">No country selected. </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <nav>
+            <ul class="pager">
+                <li><a href="?page_token={{next_page_token}}">More</a></li>
+            </ul>
+        </nav>
+    </div>
+</form>
+
+{% endblock %}

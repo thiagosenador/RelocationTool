@@ -59,9 +59,10 @@ def list(limit=10, cursor=None):
 # [END list]
 
 # [START list Users]
-def listUsers(limit=10, cursor=None):
+def listUsers(key, columnName, limit=10, cursor=None):
      ds = get_client()
-     query = ds.query(kind='User', order=['UserName'], namespace='Portkey')
+     #query = ds.query(kind=key, order=['UserName'], namespace='Portkey')
+     query = ds.query(kind=key, order=columnName, namespace='Portkey')
      it = query.fetch(limit=limit, start_cursor=cursor)
      entities, more_results, cursor = it.next_page()
      entities = builtin_list(map(from_datastore, entities))

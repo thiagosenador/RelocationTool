@@ -35,6 +35,38 @@ def list():
 
 # [END list]
 
+# [START show countries in dropdown]
+@crud.route("/RelocationCountry", methods=['GET', 'POST'])
+def listCountries():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+
+    return render_template(
+        "RelocationCountry.html",
+        countries=countries,
+        next_page_token=next_page_token)
+
+# [END show countries in dropdown]
+
+# [START show potential employers]
+@crud.route("/RelocationCountry", methods=['GET', 'POST'])
+def listPotentialEmployers():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    employers, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+
+    return render_template(
+        "RelocationCountry.html",
+        countries=countries,
+        next_page_token=next_page_token)
+
+# [END show potential employers]
+
 # [START list Users]
 @crud.route("/ShowUserPreferences", methods=['GET', 'POST'])
 def listUsers():
@@ -42,7 +74,7 @@ def listUsers():
     if token:
         token = token.encode('utf-8')
 
-    users, next_page_token = get_model().listUsers(cursor=token)
+    users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
 
     return render_template(
         "ShowUserPreferences.html",
