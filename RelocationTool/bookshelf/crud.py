@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc.
+﻿# Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,24 @@ def list():
         "list.html",
         books=books,
         next_page_token=next_page_token)
+
 # [END list]
+
+# [START list Users]
+@crud.route("/ShowUserPreferences", methods=['GET', 'POST'])
+def listUsers():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    users, next_page_token = get_model().listUsers(cursor=token)
+
+    return render_template(
+        "ShowUserPreferences.html",
+        users=users,
+        next_page_token=next_page_token)
+
+# [END list Users]
 
 
 @crud.route('/<id>')

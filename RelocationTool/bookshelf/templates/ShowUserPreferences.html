@@ -1,0 +1,27 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Users</h3>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="user">Users: </label>
+        <select name="user" id="user">
+            {% for user in users %}
+            <option value="{{user.id}}">{{user.UserName}}</option>
+            {% else %}
+            <option value="No employee found">No employee found</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <nav>
+            <ul class="pager">
+                <li><a href="?page_token={{next_page_token}}">More</a></li>
+            </ul>
+        </nav>
+    </div>
+</form>
+
+{% endblock %}
