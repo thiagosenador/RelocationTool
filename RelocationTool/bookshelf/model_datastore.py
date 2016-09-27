@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc.
+﻿# Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,6 +58,16 @@ def list(entity):
     return entities
 # [END list]
 
+# [START list Users]
+def listUsers(key, columnName, limit=10, cursor=None):
+     ds = get_client()
+     #query = ds.query(kind=key, order=['UserName'], namespace='Portkey')
+     query = ds.query(kind=key, order=columnName, namespace='Portkey')
+     it = query.fetch(limit=limit, start_cursor=cursor)
+     entities, more_results, cursor = it.next_page()
+     entities = builtin_list(map(from_datastore, entities))
+     return entities, cursor.decode('utf-8') if len(entities) == limit else None
+# [END list Users]
 
 def read(id):
     ds = get_client()

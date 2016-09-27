@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc.
+﻿# Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,58 @@ def list():
     return render_template("list.html",
         books=books,
         next_page_token=next_page_token)
+
 # [END list]
+
+# [START show countries in dropdown]
+@crud.route("/RelocationCountry", methods=['GET', 'POST'])
+def listCountries():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+
+    return render_template(
+        "RelocationCountry.html",
+        countries=countries,
+        next_page_token=next_page_token)
+
+# [END show countries in dropdown]
+
+# [START show potential employers]
+@crud.route("/RelocationCountry", methods=['GET', 'POST'])
+def listPotentialEmployers():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    employers, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+
+    return render_template(
+        "RelocationCountry.html",
+        countries=countries,
+        next_page_token=next_page_token)
+
+# [END show potential employers]
+
+# [START list Users]
+@crud.route("/ShowUserPreferences", methods=['GET', 'POST'])
+def listUsers():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
+
+    return render_template(
+        "ShowUserPreferences.html",
+        users=users,
+        next_page_token=next_page_token)
+
+# [END list Users]
+
+
 @crud.route('/<id>')
 def view(id):
     book = get_model().read(id)
