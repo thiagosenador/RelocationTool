@@ -57,16 +57,19 @@ def listCountries():
 # [END show countries in dropdown]
 
 # [START show potential employers]
-@crud.route("/RelocationCountry", methods=['GET', 'POST'])
-def listPotentialEmployers():
+@crud.route("/RelocationCountry/<countryname>", methods=['GET', 'POST'])
+def listPotentialEmployers(countryname):
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
 
-    employers, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+    users = get_model().listPref(countryName = countryname)
 
     return render_template("RelocationCountry.html",
         countries=countries,
+        users = users,
+        countryname = countryname,
         next_page_token=next_page_token)
 
 # [END show potential employers]
@@ -132,8 +135,8 @@ def add():
 # [START createUser]
 @crud.route('/createuser', methods=['GET', 'POST'])
 def createUser():
-    climateOptions = get_model().list('ClimateOptions')
-    countries = get_model().list('Country')
+    climateOptions = get_model().list('ClimateOptions', 'ClimateName')
+    countries = get_model().list('Country', 'CountryName')
     
     if request.method == 'GET':
         return render_template("createUser.html", options=climateOptions, countries=countries)
