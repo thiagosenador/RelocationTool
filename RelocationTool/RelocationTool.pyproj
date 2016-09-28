@@ -53,6 +53,7 @@
     <Content Include="bookshelf\templates\form.html" />
     <Content Include="bookshelf\templates\list.html" />
     <Content Include="bookshelf\templates\RelocationCountry.html" />
+    <Content Include="bookshelf\templates\RelocationCountryOutput.html" />
     <Content Include="bookshelf\templates\ShowUserPreferences.html" />
     <Content Include="bookshelf\templates\welcome.html" />
     <Content Include="bookshelf\templates\view.html" />
