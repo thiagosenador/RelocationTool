@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import ctypes
+import json
 
 from flask import current_app
 from gcloud import datastore
@@ -65,7 +66,6 @@ def list(entity):
 # [START list Users]
 def listUsers(key, columnName, limit=10, cursor=None):
      ds = get_client()
-     #query = ds.query(kind=key, order=['UserName'], namespace='Portkey')
      query = ds.query(kind=key, order=columnName, namespace='Portkey')
      it = query.fetch(limit=limit, start_cursor=cursor)
      entities, more_results, cursor = it.next_page()
@@ -128,15 +128,47 @@ def listPref(countryName):
 
 # [START list User countries]
 def GetUserPreferences(limit=10, cursor=None, userName=""):
-     #ctypes.windll.user32.MessageBoxW(0, userName, "User Name", 1)
      ds = get_client()
-     query = ds.query(kind='User', order=['UserName'], namespace='Portkey')
+     query = ds.query(kind='User', namespace='Portkey')
      query.add_filter('UserName', '=', userName)
      it = query.fetch(limit=limit, start_cursor=cursor)
      entities, more_results, cursor = it.next_page()
      entities = builtin_list(map(from_datastore, entities))
-     return entities, cursor.decode('utf-8') if len(entities) == limit else None
-# [END list User countries]
+     preferences = []
+     json_string = json.dumps(entities[0])
+     jsonObject = json.loads(json_string)
+     key = ds.key('User', namespace='Portkey')
+     entity = datastore.Entity(key=key)     
+     for key in jsonObject:
+            value = jsonObject[key]
+            entity[key]=value
+            if key == 'Preferences':
+                for key in value:
+                    #ctypes.windll.user32.MessageBoxW(0, key, "key", 1)
+                    val1 = value[key]
+                    #ctypes.windll.user32.MessageBoxW(0, str(val1), "val1", 1)
+                    entity[key]=val1     
+
+     #ctypes.windll.user32.MessageBoxW(0, entity['Population'], "Population0", 1)
+
+     return entity, cursor.decode('utf-8') if len(entities) == limit else None
+# [END list user preferences]
+
+# [START list countries by preferences]
+def GetUserCountriesByPreferences(limit=10, cursor=None, preferences=object):
+    population = str(preferences['Population'])
+    ds = get_client()
+    query = ds.query(kind='Country', namespace='Portkey')
+    query.add_filter('Preferences.Climate', '=', preferences['Climate'])
+    #query.add_filter('Preferences.Population', '=', int(population))
+    query.add_filter('Preferences.InternationalEducation', '=', preferences['InternationalEducation'])
+    
+    it = query.fetch(limit=limit, start_cursor=cursor)
+    countries, more_results, cursor = it.next_page()
+    countries = builtin_list(map(from_datastore, countries))
+
+    return countries, cursor.decode('utf-8') if len(countries) == limit else None
+# [END list countries by preferences]
 
 def read(id):
     ds = get_client()

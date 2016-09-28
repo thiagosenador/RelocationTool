@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import json
-
+import ctypes
 from bookshelf import get_model
 from flask import Blueprint, redirect, render_template, request, url_for
 
@@ -84,7 +84,7 @@ def listUsers():
 
     return render_template("ShowUserPreferences.html",
         users=users,
-        next_page_token=next_page_token)
+        next_page_token=next_page_token, countries=None, username=None)
 
 # [END list Users]
 
@@ -96,11 +96,12 @@ def getUserPreferences(username):
         token = token.encode('utf-8')
 
     users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
-    preferences, next_page_token = get_model().GetUserPreferences(cursor=token, userName=username)
+    entity, next_page_token = get_model().GetUserPreferences(cursor=token, userName=username)
+    countries, next_page_token = get_model().GetUserCountriesByPreferences(cursor=token, preferences=entity)
 
     return render_template(
         "ShowUserPreferences.html",
-        users=users, preferences=preferences, next_page_token=next_page_token)
+        users=users, countries=countries, username=username, next_page_token=next_page_token)
 # [END Get User countries]
 
 @crud.route("/RelocationCountryOutput", methods=['GET', 'POST'])
