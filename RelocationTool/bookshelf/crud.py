@@ -101,6 +101,13 @@ def getUserPreferences(username):
         users=users, preferences=preferences, next_page_token=next_page_token)
 # [END Get User countries]
 
+@crud.route("/RelocationCountryOutput", methods=['GET', 'POST'])
+def viewCountries():
+    countries = get_model().listPref()
+    return render_template(
+        "RelocationCountryOutput.html",
+        preferences=countries)
+
 @crud.route('/<id>')
 def view(id):
     book = get_model().read(id)

@@ -16,6 +16,8 @@ import ctypes
 
 from flask import current_app
 from gcloud import datastore
+import json
+import ctypes
 
 
 builtin_list = list
@@ -70,6 +72,60 @@ def listUsers(key, columnName, limit=10, cursor=None):
      entities = builtin_list(map(from_datastore, entities))
      return entities, cursor.decode('utf-8') if len(entities) == limit else None
 # [END list Users]
+
+# [START list]
+def GetUsersAfterRemovingExceptionCountries(users):
+    exceptionCountries = []
+    for user in users:
+        json_string = json.dumps(users[0])
+        jsonObject = json.loads(json_string)
+        for key in jsonObject:
+            value = jsonObject[key]        
+            if key == 'Preferences':
+                for key in value:    
+                    val1 = value[key]
+                    if key == 'ExceptCountries':
+                        exceptionCountries = val1
+    
+        if 'CountryForThiago' in exceptionCountries:
+            users.remove(user)
+
+def GetCountryPreferences(preferences, entities):
+    json_string = json.dumps(entities[0])
+    jsonObject = json.loads(json_string)
+    for key in jsonObject:
+        value = jsonObject[key]
+        ctypes.windll.user32.MessageBoxW(0, key, "Key", 1)
+        if key == 'Preferences':
+            for key in value:    
+                preferences[key] = value[key]            
+                val1 = value[key]
+
+def listPref():
+    ds = get_client()
+    queryCountry = ds.query(kind='Country', namespace='Portkey')
+    queryCountry.add_filter('CountryName', '=', 'CountryForThiago') # should be function parameter
+    #query.projection = ['Preferences.Climate']
+    preferences = {}
+    it = queryCountry.fetch()
+    #for task in query.fetch():
+    #    preferences.append(task['Preferences.Climate'])
+    entities, more_results, cursor = it.next_page()
+    GetCountryPreferences(preferences, entities)
+    
+    ctypes.windll.user32.MessageBoxW(0, str(preferences.get('Population')), "pref", 1)
+    queryUser = ds.query(kind='User', namespace='Portkey')
+    queryUser.add_filter('Preferences.Climate', '=', preferences.get('Climate'))
+    queryUser.add_filter('Preferences.InternationalEducation', '=', preferences.get('InternationalEducation'))
+    #queryUser.add_filter('Preferences.Population', '<=', preferences.get('Population'))
+    queryUser.add_filter('Preferences.Population', '=', 123)
+    it = queryUser.fetch()
+    users, more_results, cursor = it.next_page()
+
+    GetUsersAfterRemovingExceptionCountries(users)
+
+    return users
+# [END list]
 
 # [START list User countries]
 def GetUserPreferences(limit=10, cursor=None, userName=""):
