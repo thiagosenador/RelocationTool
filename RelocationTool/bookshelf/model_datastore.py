@@ -64,7 +64,7 @@ def list(entity):
 # [END list]
 
 # [START list Users]
-def listUsers(key, columnName, limit=10, cursor=None):
+def listEntities(key, columnName, limit=10, cursor=None):
      ds = get_client()
      query = ds.query(kind=key, order=columnName, namespace='Portkey')
      it = query.fetch(limit=limit, start_cursor=cursor)
@@ -73,8 +73,8 @@ def listUsers(key, columnName, limit=10, cursor=None):
      return entities, cursor.decode('utf-8') if len(entities) == limit else None
 # [END list Users]
 
-# [START list]
-def GetUsersAfterRemovingExceptionCountries(users):
+# [START list users for countries]
+def GetUsersAfterRemovingExceptionCountries(users, countryCode):
     exceptionCountries = []
     for user in users:
         json_string = json.dumps(users[0])
@@ -87,7 +87,7 @@ def GetUsersAfterRemovingExceptionCountries(users):
                     if key == 'ExceptCountries':
                         exceptionCountries = val1
     
-        if 'CountryForThiago' in exceptionCountries:
+        if countryCode in exceptionCountries:
             users.remove(user)
 
 def GetCountryPreferences(preferences, entities):
@@ -100,10 +100,11 @@ def GetCountryPreferences(preferences, entities):
                 preferences[key] = value[key]            
                 val1 = value[key]
 
-def listPref(countryName):
+def listPref(countryCode):
     ds = get_client()
     queryCountry = ds.query(kind='Country', namespace='Portkey')
-    queryCountry.add_filter('CountryName', '=', countryName) # should be function parameter
+    queryCountry.add_filter('Code', '=', countryCode)
+
     #query.projection = ['Preferences.Climate']
     preferences = {}
     it = queryCountry.fetch()
@@ -117,15 +118,14 @@ def listPref(countryName):
     queryUser = ds.query(kind='User', namespace='Portkey')
     queryUser.add_filter('Preferences.Climate', '=', preferences.get('Climate'))
     queryUser.add_filter('Preferences.InternationalEducation', '=', preferences.get('InternationalEducation'))
-    #queryUser.add_filter('Preferences.Population', '=', 123)
-    queryUser.add_filter('Preferences.Population', '=', preferences.get('Population'))
+    #queryUser.add_filter('Preferences.Population', '<', preferences.get('Population'))
     it = queryUser.fetch()
     users, more_results, cursor = it.next_page()
 
-    GetUsersAfterRemovingExceptionCountries(users)
+    GetUsersAfterRemovingExceptionCountries(users, countryCode)
 
     return users
-# [END list]
+# [END list users for countries]
 
 # [START list User countries]
 def GetUserPreferences(limit=10, cursor=None, userName=""):

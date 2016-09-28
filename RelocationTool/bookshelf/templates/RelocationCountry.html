@@ -10,12 +10,12 @@
         <select name="country" id="country" onchange="if (this.value) window.location.href = this.value;">
             {% for country in countries %}
                 {% if users == None %}
-                    <option value="/RelocationCountry/{{country.CountryName}}">{{country.CountryName}}</option>
+                    <option value="/RelocationCountry/{{country.Code}}">{{country.Code}}</option>
                 {% else %}
-                    {% if country.CountryName == countryname %}
-                    <option value="/RelocationCountry/{{country.CountryName}}" selected="selected">{{country.CountryName}}</option>
+                    {% if country.Code == countrycode %}
+                    <option value="/RelocationCountry/{{country.Code}}" selected="selected">{{country.Code}}</option>
                     {% else %}
-                    <option value="/RelocationCountry/{{country.CountryName}}">{{country.CountryName}}</option>
+                    <option value="/RelocationCountry/{{country.Code}}">{{country.Code}}</option>
                     {% endif %}
                 {% endif %}
             {% else %}

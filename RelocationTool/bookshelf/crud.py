@@ -48,7 +48,7 @@ def listCountries():
     if token:
         token = token.encode('utf-8')
 
-    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+    countries, next_page_token = get_model().listEntities(key='Country', columnName=['Code'], cursor=token)
 
     return render_template("RelocationCountry.html",
         countries=countries,
@@ -57,19 +57,19 @@ def listCountries():
 # [END show countries in dropdown]
 
 # [START show potential employers]
-@crud.route("/RelocationCountry/<countryname>", methods=['GET', 'POST'])
-def listPotentialEmployers(countryname):
+@crud.route("/RelocationCountry/<countrycode>", methods=['GET', 'POST'])
+def listPotentialEmployers(countrycode):
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
 
-    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
-    users = get_model().listPref(countryName = countryname)
+    countries, next_page_token = get_model().listEntities(key='Country', columnName=['Code'], cursor=token)
+    users = get_model().listPref(countryCode = countrycode)
 
     return render_template("RelocationCountry.html",
         countries=countries,
         users = users,
-        countryname = countryname,
+        countrycode = countrycode,
         next_page_token=next_page_token)
 
 # [END show potential employers]
@@ -81,7 +81,7 @@ def listUsers():
     if token:
         token = token.encode('utf-8')
 
-    users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
+    users, next_page_token = get_model().listEntities(key='User', columnName=['UserName'], cursor=token)
 
     return render_template("ShowUserPreferences.html",
         users=users,
@@ -96,7 +96,7 @@ def getUserPreferences(username):
     if token:
         token = token.encode('utf-8')
 
-    users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
+    users, next_page_token = get_model().listEntities(key='User', columnName=['UserName'], cursor=token)
     entity, next_page_token = get_model().GetUserPreferences(cursor=token, userName=username)
     countries, next_page_token = get_model().GetUserCountriesByPreferences(cursor=token, preferences=entity)
 
