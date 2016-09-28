@@ -168,6 +168,13 @@ def GetUserCountriesByPreferences(limit=10, cursor=None, preferences=object):
     countries, more_results, cursor = it.next_page()
     countries = builtin_list(map(from_datastore, countries))
 
+    # Remove country exceptions
+    if ',' in preferences['ExceptCountries']:
+        exceptionCountries = preferences['ExceptCountries'].split(',')
+        for country in countries:
+            if country['CountryName'] in exceptionCountries:
+                countries.remove(country)
+
     return countries, cursor.decode('utf-8') if len(countries) == limit else None
 # [END list countries by preferences]
 
