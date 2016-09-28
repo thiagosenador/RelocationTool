@@ -4,4 +4,23 @@
 
 <h3>Welcome to Portkey</h3>
 
+<script>
+    $(document).ready(function () {
+        $('#vmap').vectorMap({
+            map: 'world_en',
+            backgroundColor: '#a5bfdd',
+            borderColor: '#818181',
+            borderOpacity: 0.25,
+            borderWidth: 1,
+            enableZoom: true,
+            hoverColor: '#E3E6EC',
+            normalizeFunction: 'linear',
+            selectedColor: '#052E8C',
+            selectedRegions: ['BR', 'US', 'IN']
+        });
+    });
+</script>
+
+<div id="vmap" style="width: 800px; height: 600px;"></div>
+
 {% endblock %}

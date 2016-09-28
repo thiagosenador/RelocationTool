@@ -19,7 +19,13 @@
     <title>Portkey - Moving people around the world!</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='jqvmap.css') }}">
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.vmap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.vmap.world.js') }}"></script>
 </head>
 <body>
     <div class="navbar navbar-default">
@@ -29,8 +35,8 @@
             </div>
             <ul class="nav navbar-nav">
                 <li><a href="/createuser">Create user</a></li>
-                <li><a href="/ShowUserPreferences">Relocation for Users</a></li>
-                <li><a href="/RelocationCountry">Relocation for Countries</a></li>
+                <li><a href="/ShowUserPreferences">Relocation for users</a></li>
+                <li><a href="/RelocationCountry">Relocation for countries</a></li>
             </ul>
         </div>
     </div>

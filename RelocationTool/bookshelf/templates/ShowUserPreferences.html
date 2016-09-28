@@ -2,39 +2,58 @@
 
 {% block content %}
 
-<h3>Users</h3>
+<h3>Relocation for users</h3>
 
 <form method="GET" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="user">Users: </label>
-        <select name="user" id="user" onchange="if (this.value) window.location.href = this.value;">
-            {% for user in users %}
-                {% if countries == None %}
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-3">
+                <label for="user">User</label>
+                <select name="user" id="user" onchange="if (this.value) window.location.href = this.value;" class="form-control">
+                    {% for user in users %}
+                    {% if countries == None %}
                     <option value="/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
-                {% else %}
+                    {% else %}
                     {% if user.UserName == username %}
                     <option value="/ShowUserPreferences/{{user.UserName}}" selected="selected">{{user.UserName}}</option>
                     {% else %}
                     <option value="/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
                     {% endif %}
-                {% endif %}
-            {% else %}
-            <option value="No employee found">No employee found</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <nav>
-            <ul>
-                {% if countries != None %}
-                    {% for country in countries %}
-                        <li>Country: {{country['CountryName']}}</li>
+                    {% endif %}
+                    {% else %}
+                    <option value="No employee found">No employee found</option>
                     {% endfor %}
+                </select>
+            </div>
+
+            <div id="vmap" style="width: 600px; height: 400px;" class="col-md-8 col-md-offset-1">
+                {% if countries != None %}
+                {% for country in countries %}
+                <input type="hidden" class="selectedCountries" value="{{country['Code']}}" />
+                {% endfor %}
                 {% endif %}
-                <br/>
-            </ul>
-        </nav>
+            </div>
+        </div>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#vmap').vectorMap({
+            map: 'world_en',
+            backgroundColor: '#a5bfdd',
+            borderColor: '#818181',
+            borderOpacity: 0.25,
+            borderWidth: 1,
+            enableZoom: true,
+            hoverColor: '#052E8C',
+            normalizeFunction: 'linear',
+            selectedColor: '#052E8C',
+            selectedRegions: ($('input.selectedCountries').map(function () {
+                return $(this).val();
+            }).get())
+        });
+    });
+</script>
 
 {% endblock %}

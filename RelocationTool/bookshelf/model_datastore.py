@@ -54,9 +54,9 @@ def from_datastore(entity):
 
 
 # [START list]
-def list(entity):
+def list(entity, orderColumn):
     ds = get_client()
-    query = ds.query(kind=entity, namespace='Portkey')
+    query = ds.query(kind=entity, order=[orderColumn], namespace='Portkey')
     it = query.fetch()
     entities, more_results, cursor = it.next_page()
     entities = builtin_list(map(from_datastore, entities))
@@ -167,6 +167,13 @@ def GetUserCountriesByPreferences(limit=10, cursor=None, preferences=object):
     it = query.fetch(limit=limit, start_cursor=cursor)
     countries, more_results, cursor = it.next_page()
     countries = builtin_list(map(from_datastore, countries))
+
+    # Remove country exceptions
+    if ',' in preferences['ExceptCountries']:
+        exceptionCountries = preferences['ExceptCountries'].split(',')
+        for country in countries:
+            if country['CountryName'] in exceptionCountries:
+                countries.remove(country)
 
     return countries, cursor.decode('utf-8') if len(countries) == limit else None
 # [END list countries by preferences]

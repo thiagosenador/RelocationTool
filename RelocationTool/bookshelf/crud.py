@@ -135,8 +135,8 @@ def add():
 # [START createUser]
 @crud.route('/createuser', methods=['GET', 'POST'])
 def createUser():
-    climateOptions = get_model().list('ClimateOptions')
-    countries = get_model().list('Country')
+    climateOptions = get_model().list('ClimateOptions', 'ClimateName')
+    countries = get_model().list('Country', 'CountryName')
     
     if request.method == 'GET':
         return render_template("createUser.html", options=climateOptions, countries=countries)
