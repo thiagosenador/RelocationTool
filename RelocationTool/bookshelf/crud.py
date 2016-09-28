@@ -130,12 +130,15 @@ def createUser():
     if request.method == 'GET':
         return render_template("createUser.html", options=climateOptions, countries=countries)
     
-    data = request.form.to_dict(flat=True)
+    data = request.form.to_dict()
+    data['exceptions'] = request.form.getlist('exceptCountries')
 
     user = get_model().createUserPreference(data)
 
-    return render_template("createUser.html", options=climateOptions)
+    return render_template("createUser.html", options=climateOptions, countries=countries)
 # [END createUser]
+
+
 @crud.route('/<id>/edit', methods=['GET', 'POST'])
 def edit(id):
     book = get_model().read(id)
