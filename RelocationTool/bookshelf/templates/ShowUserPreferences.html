@@ -9,10 +9,10 @@
         <label for="user">Users: </label>
         <select name="user" id="user" onchange="if (this.value) window.location.href = this.value;">
             {% for user in users %}
-                {% if preferences == undefined %}
+                {% if countries == None %}
                     <option value="/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
                 {% else %}
-                    {% if user.UserName == preferences[0].UserName %}
+                    {% if user.UserName == username %}
                     <option value="/ShowUserPreferences/{{user.UserName}}" selected="selected">{{user.UserName}}</option>
                     {% else %}
                     <option value="/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
@@ -26,12 +26,12 @@
     <div>
         <nav>
             <ul>
-                {% for preference in preferences %}
-                <li>Climate: {{preference.Preferences['Climate']}}</li>
-                <li>Population: {{preference.Preferences['Population']}}</li>
-                <li>International Education: {{preference.Preferences['InternationalEducation']}}</li>
-                <br />
-                {% endfor %}
+                {% if countries != None %}
+                    {% for country in countries %}
+                        <li>Country: {{country['CountryName']}}</li>
+                    {% endfor %}
+                {% endif %}
+                <br/>
             </ul>
         </nav>
     </div>

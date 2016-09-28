@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import json
-
+import ctypes
 from bookshelf import get_model
 from flask import Blueprint, redirect, render_template, request, url_for
 
@@ -57,16 +57,19 @@ def listCountries():
 # [END show countries in dropdown]
 
 # [START show potential employers]
-@crud.route("/RelocationCountry", methods=['GET', 'POST'])
-def listPotentialEmployers():
+@crud.route("/RelocationCountry/<countryname>", methods=['GET', 'POST'])
+def listPotentialEmployers(countryname):
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
 
-    employers, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+    users = get_model().listPref(countryName = countryname)
 
     return render_template("RelocationCountry.html",
         countries=countries,
+        users = users,
+        countryname = countryname,
         next_page_token=next_page_token)
 
 # [END show potential employers]
@@ -82,7 +85,7 @@ def listUsers():
 
     return render_template("ShowUserPreferences.html",
         users=users,
-        next_page_token=next_page_token)
+        next_page_token=next_page_token, countries=None, username=None)
 
 # [END list Users]
 
@@ -94,12 +97,20 @@ def getUserPreferences(username):
         token = token.encode('utf-8')
 
     users, next_page_token = get_model().listUsers(key='User', columnName=['UserName'], cursor=token)
-    preferences, next_page_token = get_model().GetUserPreferences(cursor=token, userName=username)
+    entity, next_page_token = get_model().GetUserPreferences(cursor=token, userName=username)
+    countries, next_page_token = get_model().GetUserCountriesByPreferences(cursor=token, preferences=entity)
 
     return render_template(
         "ShowUserPreferences.html",
-        users=users, preferences=preferences, next_page_token=next_page_token)
+        users=users, countries=countries, username=username, next_page_token=next_page_token)
 # [END Get User countries]
+
+@crud.route("/RelocationCountryOutput", methods=['GET', 'POST'])
+def viewCountries():
+    countries = get_model().listPref()
+    return render_template(
+        "RelocationCountryOutput.html",
+        preferences=countries)
 
 @crud.route('/<id>')
 def view(id):
