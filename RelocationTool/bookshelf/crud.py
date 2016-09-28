@@ -57,16 +57,18 @@ def listCountries():
 # [END show countries in dropdown]
 
 # [START show potential employers]
-@crud.route("/RelocationCountry", methods=['GET', 'POST'])
-def listPotentialEmployers():
+@crud.route("/RelocationCountry/<countryname>", methods=['GET', 'POST'])
+def listPotentialEmployers(countryname):
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
 
-    employers, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+    countries, next_page_token = get_model().listUsers(key='Country', columnName=['CountryName'], cursor=token)
+    users = get_model().listPref(countryName = countryname)
 
     return render_template("RelocationCountry.html",
         countries=countries,
+        users = users,
         next_page_token=next_page_token)
 
 # [END show potential employers]

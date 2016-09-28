@@ -95,30 +95,29 @@ def GetCountryPreferences(preferences, entities):
     jsonObject = json.loads(json_string)
     for key in jsonObject:
         value = jsonObject[key]
-        ctypes.windll.user32.MessageBoxW(0, key, "Key", 1)
         if key == 'Preferences':
             for key in value:    
                 preferences[key] = value[key]            
                 val1 = value[key]
 
-def listPref():
+def listPref(countryName):
     ds = get_client()
     queryCountry = ds.query(kind='Country', namespace='Portkey')
-    queryCountry.add_filter('CountryName', '=', 'CountryForThiago') # should be function parameter
+    queryCountry.add_filter('CountryName', '=', countryName) # should be function parameter
     #query.projection = ['Preferences.Climate']
     preferences = {}
     it = queryCountry.fetch()
     #for task in query.fetch():
     #    preferences.append(task['Preferences.Climate'])
     entities, more_results, cursor = it.next_page()
+
     GetCountryPreferences(preferences, entities)
     
-    ctypes.windll.user32.MessageBoxW(0, str(preferences.get('Population')), "pref", 1)
+    #ctypes.windll.user32.MessageBoxW(0, str(preferences.get('Population')), "pref", 1)
     queryUser = ds.query(kind='User', namespace='Portkey')
     queryUser.add_filter('Preferences.Climate', '=', preferences.get('Climate'))
     queryUser.add_filter('Preferences.InternationalEducation', '=', preferences.get('InternationalEducation'))
-    #queryUser.add_filter('Preferences.Population', '<=', preferences.get('Population'))
-    queryUser.add_filter('Preferences.Population', '=', 123)
+    queryUser.add_filter('Preferences.Population', '=', preferences.get('Population'))
     it = queryUser.fetch()
     users, more_results, cursor = it.next_page()
 
