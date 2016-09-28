@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bookshelf\" />
+    <Folder Include="bookshelf\static\" />
     <Folder Include="bookshelf\templates\" />
     <Folder Include="bookshelf\__pycache__\" />
     <Folder Include="tests\" />
@@ -48,9 +49,18 @@
     <Content Include="app.yaml" />
     <Content Include="bookshelf\crud.pyc" />
     <Content Include="bookshelf\model_datastore.pyc" />
+    <Content Include="bookshelf\static\jquery.vmap.sampledata.js" />
+    <Content Include="bookshelf\static\jqvmap.css" />
+    <Content Include="bookshelf\static\jqvmap.min.css" />
     <Content Include="bookshelf\templates\base.html" />
     <Content Include="bookshelf\templates\createUser.html" />
     <Content Include="bookshelf\templates\form.html" />
+    <Content Include="bookshelf\static\jquery.vmap.min.js">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="bookshelf\static\jquery.vmap.world.js">
+      <Publish>True</Publish>
+    </Content>
     <Content Include="bookshelf\templates\list.html" />
     <Content Include="bookshelf\templates\RelocationCountry.html" />
     <Content Include="bookshelf\templates\ShowUserPreferences.html" />

@@ -51,9 +51,9 @@ def from_datastore(entity):
 
 
 # [START list]
-def list(entity):
+def list(entity, orderColumn):
     ds = get_client()
-    query = ds.query(kind=entity, namespace='Portkey')
+    query = ds.query(kind=entity, order=[orderColumn], namespace='Portkey')
     it = query.fetch()
     entities, more_results, cursor = it.next_page()
     entities = builtin_list(map(from_datastore, entities))
