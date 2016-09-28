@@ -7,35 +7,21 @@
 <form method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="country">Select Country:  </label>
-        <select name="country" id="country" onchange="if (this.value) window.location.href = this.value;">
+        <select name="country" id="country">
             {% for country in countries %}
-                {% if users == None %}
-                    <option value="/RelocationCountry/{{country.CountryName}}">{{country.CountryName}}</option>
-                {% else %}
-                    {% if country.CountryName == countryname %}
-                    <option value="/RelocationCountry/{{country.CountryName}}" selected="selected">{{country.CountryName}}</option>
-                    {% else %}
-                    <option value="/RelocationCountry/{{country.CountryName}}">{{country.CountryName}}</option>
-                    {% endif %}
-                {% endif %}
+            <option value="{{country.id}}">{{country.CountryName}}</option>
             {% else %}
-                <option value="Nocountry">No country selected.</option>
+            <option value="NoCountry">No country selected. </option>
             {% endfor %}
         </select>
     </div>
     <div>
         <nav>
-            <ul>
-                {% if users != None %}
-                    {% for user in users %}
-                        <li>User: {{user['UserName']}}</li>
-                    {% endfor %}
-                {% endif %}
-                <br/>
+            <ul class="pager">
+                <li><a href="?page_token={{next_page_token}}">More</a></li>
             </ul>
         </nav>
     </div>
-
 </form>
 
 {% endblock %}
