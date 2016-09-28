@@ -117,6 +117,7 @@ def listPref(countryName):
     queryUser = ds.query(kind='User', namespace='Portkey')
     queryUser.add_filter('Preferences.Climate', '=', preferences.get('Climate'))
     queryUser.add_filter('Preferences.InternationalEducation', '=', preferences.get('InternationalEducation'))
+    #queryUser.add_filter('Preferences.Population', '=', 123)
     queryUser.add_filter('Preferences.Population', '=', preferences.get('Population'))
     it = queryUser.fetch()
     users, more_results, cursor = it.next_page()

@@ -9,11 +9,18 @@
         <label for="country">Select Country:  </label>
         <select name="country" id="country" onchange="if (this.value) window.location.href = this.value;">
             {% for country in countries %}
-                <option value="/RelocationCountry/{{country.CountryName}}" >{{country.CountryName}}</option>                
+                {% if users == None %}
+                    <option value="/RelocationCountry/{{country.CountryName}}">{{country.CountryName}}</option>
+                {% else %}
+                    {% if country.CountryName == countryname %}
+                    <option value="/RelocationCountry/{{country.CountryName}}" selected="selected">{{country.CountryName}}</option>
+                    {% else %}
+                    <option value="/RelocationCountry/{{country.CountryName}}">{{country.CountryName}}</option>
+                    {% endif %}
+                {% endif %}
             {% else %}
                 <option value="Nocountry">No country selected.</option>
             {% endfor %}
-
         </select>
     </div>
     <div>

@@ -69,6 +69,7 @@ def listPotentialEmployers(countryname):
     return render_template("RelocationCountry.html",
         countries=countries,
         users = users,
+        countryname = countryname,
         next_page_token=next_page_token)
 
 # [END show potential employers]
