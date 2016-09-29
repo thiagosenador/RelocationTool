@@ -2,14 +2,15 @@
 
 {% block content %}
 
-<h3>Relocation for users</h3>
+<h3>Relocation per user</h3>
 
-<form method="GET" enctype="multipart/form-data">
+<form method="GET" enctype="multipart/form-data" class="form">
     <div class="row">
         <div class="form-group">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="user">User</label>
                 <select name="user" id="user" onchange="if (this.value) window.location.href = this.value;" class="form-control">
+                    <option>Select a user...</option>
                     {% for user in users %}
                     {% if countries == None %}
                     <option value="/ShowUserPreferences/{{user.UserName}}">{{user.UserName}}</option>
@@ -26,7 +27,7 @@
                 </select>
             </div>
 
-            <div id="vmap" style="width: 600px; height: 400px;" class="col-md-8 col-md-offset-1">
+            <div id="vmap" style="width: 800px; height: 600px;" class="col-md-9 col-md-offset-1">
                 {% if countries != None %}
                 {% for country in countries %}
                 <input type="hidden" class="selectedCountries" value="{{country['Code']}}" />

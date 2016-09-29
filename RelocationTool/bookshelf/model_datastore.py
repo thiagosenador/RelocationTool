@@ -177,7 +177,7 @@ def GetUserCountriesByPreferences(limit=10, cursor=None, preferences=object):
     countries = builtin_list(map(from_datastore, countries))
 
     # Remove country exceptions
-    if ',' in preferences['ExceptCountries']:
+    if 'ExceptCountries' in preferences and ',' in preferences['ExceptCountries']:
         exceptionCountries = preferences['ExceptCountries'].split(',')
         for country in countries:
             if country['CountryName'] in exceptionCountries:
@@ -219,8 +219,8 @@ def createUserPreference(data):
 
     embedded_key = ds.key('User')
     embedded_entity = datastore.Entity(key=embedded_key)
-    embedded_entity['InternationalEducation'] = data['education'] == 'true' if 'education' in data  else False
-    embedded_entity['Population'] = int(data['population'])
+    embedded_entity['InternationalEducation'] = data['education'] == 'true' if 'education' in data else False
+    embedded_entity['Population'] = int(data['population']) if data['population'] != '' else int('0')
     embedded_entity['Climate'] = data['climate']
     embedded_entity['ExceptCountries'] = data['exceptions'] if 'exceptions' in data else ''
 
