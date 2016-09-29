@@ -41,7 +41,6 @@
             selectedColor: '#052E8C',
             onRegionClick: function (element, code, region) {
                 $(".selectedCountry").val(code);
-                alert(code);
                 window.location.href = "/RelocationCountry/" + code.toUpperCase();
             },
             selectedRegions: $(".selectedCountry").val()
