@@ -15,6 +15,7 @@
             <div class="form-group">
                 <label for="climate">Climate</label>
                 <select id="climate" name="climate" class="form-control">
+                    <option>Select a climate...</option>
                     {% for climate in options %}
                     <option value="{{climate.ClimateName}}">{{climate.ClimateName}}</option>
                     {% endfor %}

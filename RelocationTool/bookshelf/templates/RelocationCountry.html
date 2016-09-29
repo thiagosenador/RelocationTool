@@ -2,40 +2,46 @@
 
 {% block content %}
 
-<h3>Country</h3>
+<h3>Relocation per country</h3>
 
 <form method="POST" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="country">Select Country:  </label>
-        <select name="country" id="country" onchange="if (this.value) window.location.href = this.value;">
-            {% for country in countries %}
-                {% if users == None %}
-                    <option value="/RelocationCountry/{{country.Code}}">{{country.Code}}</option>
-                {% else %}
-                    {% if country.Code == countrycode %}
-                    <option value="/RelocationCountry/{{country.Code}}" selected="selected">{{country.Code}}</option>
-                    {% else %}
-                    <option value="/RelocationCountry/{{country.Code}}">{{country.Code}}</option>
-                    {% endif %}
-                {% endif %}
-            {% else %}
-                <option value="Nocountry">No country selected.</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <nav>
-            <ul>
-                {% if users != None %}
-                    {% for user in users %}
-                        <li>User: {{user['UserName']}}</li>
-                    {% endfor %}
-                {% endif %}
-                <br/>
-            </ul>
-        </nav>
-    </div>
+    <div class="row">
+        <div class="form-group col-md-9">
+            <label for="vmap">Select Country</label>
+            <div id="vmap" style="width: 800px; height: 600px;"></div>
+        </div>
 
+        <div class="col-md-2 list-group">
+            <label>Users</label>
+            {% if users != None %}
+            {% for user in users %}
+            <a href="#" class="list-group-item">{{user['UserName']}}</a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#vmap').vectorMap({
+            map: 'world_en',
+            backgroundColor: '#a5bfdd',
+            borderColor: '#818181',
+            borderOpacity: 0.25,
+            borderWidth: 1,
+            enableZoom: true,
+            hoverColor: '#052E8C',
+            normalizeFunction: 'linear',
+            selectedColor: '#052E8C',
+            onRegionClick: function (element, code, region) {
+                window.location.href = "/RelocationCountry/" + code.toUpperCase();
+            },
+            selectedRegions: ($('input.selectedCountries').map(function () {
+                return $(this).val();
+            }).get())
+        });
+    });
+</script>
 
 {% endblock %}
