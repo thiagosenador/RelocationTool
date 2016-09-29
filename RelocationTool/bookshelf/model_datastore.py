@@ -120,6 +120,7 @@ def listPref(countryCode):
     entities, more_results, cursor = it.next_page()
 
     countryName = GetCountryInformation(preferences, entities)
+    if countryName is None: return
 
     #ctypes.windll.user32.MessageBoxW(0, str(preferences.get('Population')), "pref", 1)
     queryUser = ds.query(kind='User', namespace='Portkey')
