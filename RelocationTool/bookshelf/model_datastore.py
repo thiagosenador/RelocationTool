@@ -233,7 +233,7 @@ def createUserPreference(data):
     embedded_key = ds.key('User')
     embedded_entity = datastore.Entity(key=embedded_key)
     embedded_entity['InternationalEducation'] = data['education'] == 'true' if 'education' in data else False
-    embedded_entity['Population'] = int(data['population']) if data['population'] != '' else int('0')
+    embedded_entity['Population'] = int(data['population']) if data['population'] != '' else int('10000000000000')
     embedded_entity['Climate'] = data['climate']
     embedded_entity['ExceptCountries'] = data['exceptions'] if 'exceptions' in data else ''
 
