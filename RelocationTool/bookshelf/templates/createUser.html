@@ -9,7 +9,7 @@
         <div class="col-md-5 well">
             <div class="form-group">
                 <label for="userName">User name</label>
-                <input type="text" name="userName" id="userName" class="form-control"/>
+                <input type="text" name="userName" id="userName" class="form-control" />
             </div>
 
             <div class="form-group">
@@ -24,14 +24,20 @@
 
             <div class="form-group">
                 <label for="population">Population</label>
-                <input type="text" name="population" id="population" class="form-control"/>
+                <input type="text" name="population" id="population" class="form-control" />
             </div>
 
             <div class="checkbox">
                 <label for="education">
-                    <input type="checkbox" name="education" id="education" value="true"/> International education
+                    <input type="checkbox" name="education" id="education" value="true" /> International education
                 </label>
             </div>
+
+            <br />
+            <br />
+
+            <button type="submit" class="btn btn-primary">Create user</button>
+            <button type="reset" class="btn btn-info">Reset</button>
         </div>
 
         <div class="col-md-5 col-md-offset-1 well">
@@ -41,7 +47,7 @@
                 {% for country in countries %}
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="exceptCountries" value="{{country.CountryName}}"/>{{country.CountryName}}
+                        <input type="checkbox" name="exceptCountries" value="{{country.CountryName}}" />{{country.CountryName}}
                     </label>
                 </div>
                 {% endfor %}
@@ -49,7 +55,7 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-success">Save</button>
+
 </form>
 
 {% endblock %}
