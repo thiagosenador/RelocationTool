@@ -26,9 +26,6 @@
 
 <script>
     $(document).ready(function () {
-
-        var selectedCountry;
-
         $('#vmap').vectorMap({
             map: 'world_en',
             backgroundColor: '#a5bfdd',
@@ -41,7 +38,6 @@
             selectedColor: '#052E8C',
             onRegionClick: function (element, code, region) {
                 $(".selectedCountry").val(code);
-                alert(code);
                 window.location.href = "/RelocationCountry/" + code.toUpperCase();
             },
             selectedRegions: $(".selectedCountry").val()

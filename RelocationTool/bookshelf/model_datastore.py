@@ -74,33 +74,38 @@ def listEntities(key, columnName, limit=100, cursor=None):
 # [END list Users]
 
 # [START list users for countries]
-def GetUsersAfterRemovingExceptionCountries(users, countryCode):
+def GetUsersAfterRemovingExceptions(users, countryName, countryPopulation):
     exceptionCountries = []
+    population = 0
     for user in users:
-        json_string = json.dumps(users[0])
+        json_string = json.dumps(user)
         jsonObject = json.loads(json_string)
         for key in jsonObject:
             value = jsonObject[key]        
             if key == 'Preferences':
                 for key in value:    
                     val1 = value[key]
-                    if key == 'ExceptCountries':
+                    if key == 'ExceptCountries':                        
                         exceptionCountries = val1
-    
-        if countryCode in exceptionCountries:
+                    if key == 'Population':
+                        population = val1
+
+        if countryName in exceptionCountries or int(population) > countryPopulation:
             users.remove(user)
 
-def GetCountryPreferences(preferences, entities):
+def GetCountryInformation(preferences, entities):
     if len(entities) <= 0: return
-
     json_string = json.dumps(entities[0])
     jsonObject = json.loads(json_string)
     for key in jsonObject:
         value = jsonObject[key]
+        if key == 'CountryName':
+            countryName = value 
         if key == 'Preferences':
             for key in value:    
                 preferences[key] = value[key]            
                 val1 = value[key]
+    return countryName
 
 def listPref(countryCode):
     ds = get_client()
@@ -114,17 +119,18 @@ def listPref(countryCode):
     #    preferences.append(task['Preferences.Climate'])
     entities, more_results, cursor = it.next_page()
 
-    GetCountryPreferences(preferences, entities)
-    
-    #ctypes.windll.user32.MessageBoxW(0, str(preferences.get('Population')), "pref", 1)
+    countryName = GetCountryInformation(preferences, entities)
+    if countryName is None: return
+
     queryUser = ds.query(kind='User', namespace='Portkey')
     queryUser.add_filter('Preferences.Climate', '=', preferences.get('Climate'))
     queryUser.add_filter('Preferences.InternationalEducation', '=', preferences.get('InternationalEducation'))
-    #queryUser.add_filter('Preferences.Population', '<', preferences.get('Population'))
+    #ctypes.windll.user32.MessageBoxW(0, str(preferences.get('Population')), "pref", 1)
+    #queryUser.add_filter('Preferences.Population', '<', int(preferences.get('Population')))
     it = queryUser.fetch()
     users, more_results, cursor = it.next_page()
 
-    GetUsersAfterRemovingExceptionCountries(users, countryCode)
+    GetUsersAfterRemovingExceptions(users, countryName, int(preferences.get('Population')))
 
     return users
 # [END list users for countries]

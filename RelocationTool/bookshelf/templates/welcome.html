@@ -1,26 +1,37 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Portkey - Moving people around the world!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block content %}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
-<h3>Welcome to Portkey</h3>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Welcome to Portkey</h1>
+            <h2>Let's move the people!!!</h2>
+            <br />
+            <br />
+            <div class="row">
+                <div class="col-md-8">
+                    <img src="{{ url_for('static', filename='eskimo.jpg') }}" class="img-circle" width="300" height="300" />
+                    <img src="{{ url_for('static', filename='desert.jpg') }}" class="img-circle" width="300" height="300" />
+                    <img src="{{ url_for('static', filename='treeHouse.jpg') }}" class="img-circle" width="300" height="300" />
+                    <img src="{{ url_for('static', filename='tropical.jpg') }}" class="img-circle" width="300" height="300" />
+                </div>
 
-<script>
-    $(document).ready(function () {
-        $('#vmap').vectorMap({
-            map: 'world_en',
-            backgroundColor: '#a5bfdd',
-            borderColor: '#818181',
-            borderOpacity: 0.25,
-            borderWidth: 1,
-            enableZoom: true,
-            hoverColor: '#E3E6EC',
-            normalizeFunction: 'linear',
-            selectedColor: '#052E8C',
-            selectedRegions: ['BR', 'US', 'IN']
-        });
-    });
-</script>
+                <div class="col-md-4">
+                    <p><a class="btn btn-primary btn-lg" style="width: 250px;" href="/createuser" role="button">Create user</a></p>
+                    <p><a class="btn btn-primary btn-lg" style="width: 250px;" href="/ShowUserPreferences" role="button">Relocation per users</a></p>
+                    <p><a class="btn btn-primary btn-lg" style="width: 250px;" href="/RelocationCountry" role="button">Relocation per countries</a></p>
+                </div>
+            </div>
 
-<div id="vmap" style="width: 800px; height: 600px;"></div>
-
-{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
