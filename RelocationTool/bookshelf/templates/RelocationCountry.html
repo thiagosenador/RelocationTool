@@ -7,12 +7,12 @@
 <form method="POST" enctype="multipart/form-data">
     <div class="row">
         <div class="form-group col-md-9">
-            <label for="vmap">Select Country</label>
+            <label for="vmap">Select a country</label>
             <div id="vmap" style="width: 800px; height: 600px;"></div>
         </div>
 
-        <div class="col-md-2 list-group">
-            <label>Users</label>
+        <div class="col-md-3 list-group">
+            <label>Users willing to be relocated</label>
             {% if users != None %}
             {% for user in users %}
             <a href="#" class="list-group-item">{{user['UserName']}}</a>
@@ -20,10 +20,15 @@
             {% endif %}
         </div>
     </div>
+
+    <input type="hidden" class="selectedCountry" value="{{countrycode}}"/>
 </form>
 
 <script>
     $(document).ready(function () {
+
+        var selectedCountry;
+
         $('#vmap').vectorMap({
             map: 'world_en',
             backgroundColor: '#a5bfdd',
@@ -35,11 +40,11 @@
             normalizeFunction: 'linear',
             selectedColor: '#052E8C',
             onRegionClick: function (element, code, region) {
+                $(".selectedCountry").val(code);
+                alert(code);
                 window.location.href = "/RelocationCountry/" + code.toUpperCase();
             },
-            selectedRegions: ($('input.selectedCountries').map(function () {
-                return $(this).val();
-            }).get())
+            selectedRegions: $(".selectedCountry").val()
         });
     });
 </script>
