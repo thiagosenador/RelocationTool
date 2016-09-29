@@ -64,7 +64,7 @@ def list(entity, orderColumn):
 # [END list]
 
 # [START list Users]
-def listEntities(key, columnName, limit=10, cursor=None):
+def listEntities(key, columnName, limit=100, cursor=None):
      ds = get_client()
      query = ds.query(kind=key, order=columnName, namespace='Portkey')
      it = query.fetch(limit=limit, start_cursor=cursor)
@@ -130,7 +130,7 @@ def listPref(countryCode):
 # [END list users for countries]
 
 # [START list User countries]
-def GetUserPreferences(limit=10, cursor=None, userName=""):
+def GetUserPreferences(limit=100, cursor=None, userName=""):
      ds = get_client()
      query = ds.query(kind='User', namespace='Portkey')
      query.add_filter('UserName', '=', userName)
@@ -158,24 +158,37 @@ def GetUserPreferences(limit=10, cursor=None, userName=""):
 # [END list user preferences]
 
 # [START list countries by preferences]
-def GetUserCountriesByPreferences(limit=10, cursor=None, preferences=object):
+def GetUserCountriesByPreferences(limit=100, cursor=None, preferences=object):
     population = str(preferences['Population'])
     ds = get_client()
     query = ds.query(kind='Country', namespace='Portkey')
     query.add_filter('Preferences.Climate', '=', preferences['Climate'])
-    #query.add_filter('Preferences.Population', '=', int(population))
     query.add_filter('Preferences.InternationalEducation', '=', preferences['InternationalEducation'])
     
     it = query.fetch(limit=limit, start_cursor=cursor)
     countries, more_results, cursor = it.next_page()
     countries = builtin_list(map(from_datastore, countries))
+        
+    countriesToRemove = []
 
+    exceptCountryExists = False
+    populationExists = False
     # Remove country exceptions
-    if 'ExceptCountries' in preferences and ',' in preferences['ExceptCountries']:
-        exceptionCountries = preferences['ExceptCountries'].split(',')
-        for country in countries:
-            if country['CountryName'] in exceptionCountries:
-                countries.remove(country)
+    if 'ExceptCountries' in preferences:
+        exceptCountryExists = True
+
+    if 'Population' in preferences:
+        populationExists = True
+
+    for country in countries:
+        json_string = json.dumps(country['Preferences'])
+        jsonObject = json.loads(json_string)
+        if (exceptCountryExists and (country['CountryName'] in preferences['ExceptCountries'])) or (populationExists and (int(jsonObject['Population']) > int(population))):
+            countriesToRemove.append(country)
+
+
+    for countryToRemove in countriesToRemove: 
+        countries.remove(countryToRemove)
 
     return countries, cursor.decode('utf-8') if len(countries) == limit else None
 # [END list countries by preferences]
