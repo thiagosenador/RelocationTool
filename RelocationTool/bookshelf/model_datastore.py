@@ -90,7 +90,7 @@ def GetUsersAfterRemovingExceptions(users, countryName, countryPopulation):
                     if key == 'Population':
                         population = val1
 
-        if countryName in exceptionCountries or int(population) > countryPopulation:
+        if countryName in exceptionCountries or int(population) < int(countryPopulation):
             users.remove(user)
 
 def GetCountryInformation(preferences, entities):
