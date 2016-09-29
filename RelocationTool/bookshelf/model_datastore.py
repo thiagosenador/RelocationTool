@@ -90,7 +90,8 @@ def GetUsersAfterRemovingExceptions(users, countryName, countryPopulation):
                     if key == 'Population':
                         population = val1
 
-        if countryName in exceptionCountries or int(population) < int(countryPopulation):
+        #ctypes.windll.user32.MessageBoxW(0, str(exceptionCountries), "exceptionCountries", 1)
+        if countryName in exceptionCountries or int(population) <= int(countryPopulation):
             users.remove(user)
 
 def GetCountryInformation(preferences, entities):
@@ -185,11 +186,11 @@ def GetUserCountriesByPreferences(limit=100, cursor=None, preferences=object):
 
     if 'Population' in preferences:
         populationExists = True
-
+    
     for country in countries:
         json_string = json.dumps(country['Preferences'])
         jsonObject = json.loads(json_string)
-        if (exceptCountryExists and (country['CountryName'] in preferences['ExceptCountries'])) or (populationExists and (int(jsonObject['Population']) > int(population))):
+        if (exceptCountryExists and (country['CountryName'] in preferences['ExceptCountries'])) or (populationExists and (int(population) <= int(jsonObject['Population']))):
             countriesToRemove.append(country)
 
 
