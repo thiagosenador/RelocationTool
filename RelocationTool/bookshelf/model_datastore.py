@@ -94,6 +94,7 @@ def GetUsersAfterRemovingExceptions(users, countryName, countryPopulation):
             users.remove(user)
 
 def GetCountryInformation(preferences, entities):
+    if len(entities) <= 0: return
     json_string = json.dumps(entities[0])
     jsonObject = json.loads(json_string)
     for key in jsonObject:
